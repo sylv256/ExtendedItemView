@@ -130,6 +130,10 @@ public abstract class MixinAbstractContainerScreen<T extends AbstractContainerMe
 
         if (mouseButton == 0 && !ItemViewOverlay.SEARCHBAR.isHovered() && ItemViewOverlay.SEARCHBAR.isFocused())
             ItemViewOverlay.SEARCHBAR.setFocused(false);
+        if (mouseButton == 0 && !ItemViewOverlay.BACK.isHovered() && ItemViewOverlay.BACK.isFocused())
+            ItemViewOverlay.BACK.setFocused(false);
+        if (mouseButton == 0 && !ItemViewOverlay.NEXT.isHovered() && ItemViewOverlay.NEXT.isFocused())
+            ItemViewOverlay.NEXT.setFocused(false);
 
         ItemViewOverlay.INSTANCE.clickMouse((int) mouseX, (int) mouseY, mouseButton);
     }
