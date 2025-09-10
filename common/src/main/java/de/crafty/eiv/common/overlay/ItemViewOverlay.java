@@ -11,13 +11,16 @@ import de.crafty.eiv.common.recipe.inventory.SlotContent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +39,8 @@ public class ItemViewOverlay {
     private final LinkedList<ItemSlot> slots = new LinkedList<>();
 
     public static EditBox SEARCHBAR = null;
+    public static Button NEXT = null;
+    public static Button BACK = null;
     private long lastSearchbarClick = -1;
 
     private int width, height, xStart;
@@ -133,8 +138,8 @@ public class ItemViewOverlay {
         spaceForOverlayX = this.fittingItemsPerRow * 20;
 
 
-        int headlineSpace = 20;
-        int bottomSpace = 40;
+        int headlineSpace = 30;
+        int bottomSpace = 20;
 
         int spaceForOverlayY = screen.height - (headlineSpace + bottomSpace);
         this.fittingItemsPerColumn = spaceForOverlayY / 20;
@@ -305,12 +310,12 @@ public class ItemViewOverlay {
         Font font = client.font;
 
 
-        guiGraphics.drawCenteredString(font, "ItemView", screen.width - this.getWidth() / 2, 6, -1);
+//        guiGraphics.drawCenteredString(font, "ItemView", screen.width - this.getWidth() / 2, 6, -1);
         guiGraphics.fill(this.xStart, 0, screen.width, screen.height, new Color(0, 0, 0, 64).getRGB());
 
         if(this.fittingItemsPerRow * this.fittingItemsPerColumn > 0){
             int maxPageIndex = (this.availableItems.size() / (this.fittingItemsPerColumn * this.fittingItemsPerRow));
-            guiGraphics.drawCenteredString(font, (this.getPage() + 1) + "/" + (maxPageIndex + 1), screen.width - this.width / 2, screen.height - 2 - 20 - 10, -1);
+            guiGraphics.drawCenteredString(font, (this.getPage() + 1) + "/" + (maxPageIndex + 1), screen.width - this.width / 2, 10, -1);
         }
 
 
@@ -347,6 +352,26 @@ public class ItemViewOverlay {
         ItemViewOverlay.SEARCHBAR.setResponder(ItemViewOverlay.INSTANCE::updateQuery);
 
         ItemViewOverlay.SEARCHBAR.visible = ItemViewOverlay.INSTANCE.isEnabled();
+    }
+
+    public void createButtons(InventoryPositionInfo info){
+
+        ItemViewOverlay.BACK = SpriteIconButton.builder(Component.literal("<"), (button)-> {
+            int fittingPerPage = this.fittingItemsPerRow * this.fittingItemsPerColumn;
+            this.startIndex = Math.max(0, this.startIndex - fittingPerPage);
+            this.updateSlots();
+        }, true).sprite(ResourceLocation.fromNamespaceAndPath("eiv", "back"), 10, 10).width(16).build();
+        ItemViewOverlay.NEXT = SpriteIconButton.builder(Component.literal(">"), (button)->{
+            int fittingPerPage = this.fittingItemsPerRow * this.fittingItemsPerColumn;
+            this.startIndex = Math.min(this.startIndex + fittingPerPage, this.availableItems.size() - (this.availableItems.size() - (this.availableItems.size() / fittingPerPage) * fittingPerPage));
+            this.updateSlots();
+        }, true).sprite(ResourceLocation.fromNamespaceAndPath("eiv", "next"), 10, 10).width(16).build();
+        ItemViewOverlay.BACK.setPosition(ItemViewOverlay.INSTANCE.getOverlayStartX()+2, 3);
+        ItemViewOverlay.NEXT.setPosition(info.screenWidth-18, 3);
+
+
+        ItemViewOverlay.NEXT.visible = ItemViewOverlay.INSTANCE.isEnabled();
+        ItemViewOverlay.BACK.visible = ItemViewOverlay.INSTANCE.isEnabled();
     }
 
 

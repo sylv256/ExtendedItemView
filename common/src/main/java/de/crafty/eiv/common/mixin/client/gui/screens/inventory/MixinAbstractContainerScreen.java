@@ -85,7 +85,10 @@ public abstract class MixinAbstractContainerScreen<T extends AbstractContainerMe
     @Unique
     private void addSearchbar(ItemViewOverlay.InventoryPositionInfo info) {
         ItemViewOverlay.INSTANCE.createSearchbarElement(info);
+        ItemViewOverlay.INSTANCE.createButtons(info);
         this.addRenderableWidget(ItemViewOverlay.SEARCHBAR);
+        this.addRenderableWidget(ItemViewOverlay.BACK);
+        this.addRenderableWidget(ItemViewOverlay.NEXT);
     }
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
