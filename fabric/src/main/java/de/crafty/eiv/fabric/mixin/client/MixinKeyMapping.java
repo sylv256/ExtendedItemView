@@ -15,6 +15,6 @@ public abstract class MixinKeyMapping {
 
     @Inject(method = "resetMapping", at = @At("RETURN"))
     private static void makeEivException(CallbackInfo ci){
-        FabricEIVClient.excludeEivMappings();
+//        FabricEIVClient.excludeEivMappings();
     }
 }

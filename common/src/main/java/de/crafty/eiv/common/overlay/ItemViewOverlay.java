@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.Registries;
@@ -254,27 +255,27 @@ public class ItemViewOverlay {
         }
     }
 
-    public void keyPressed(int i, int j, int k) {
+    public void keyPressed(KeyEvent event) {
 
-        if (!ItemViewOverlay.SEARCHBAR.isFocused() && CommonEIVClient.TOGGLE_OVERLAY_KEYBIND.matches(i, j))
+        if (!ItemViewOverlay.SEARCHBAR.isFocused() && CommonEIVClient.TOGGLE_OVERLAY_KEYBIND.matches(event))
             ItemViewOverlay.INSTANCE.setEnabled(!ItemViewOverlay.INSTANCE.isEnabled());
 
         if (!this.isEnabled())
             return;
 
-        ItemBookmarkOverlay.INSTANCE.keyPressed(i, j, k);
+        ItemBookmarkOverlay.INSTANCE.keyPressed(event);
 
         for (ItemSlot slot : this.slots) {
             if (!slot.isHovered())
                 continue;
 
-            if (CommonEIVClient.USAGE_KEYBIND.matches(i, j))
+            if (CommonEIVClient.USAGE_KEYBIND.matches(event))
                 ItemViewOverlay.INSTANCE.openRecipeView(slot.getStack(), ItemViewOverlay.ItemViewOpenType.INPUT);
 
-            if (CommonEIVClient.RECIPE_KEYBIND.matches(i, j))
+            if (CommonEIVClient.RECIPE_KEYBIND.matches(event))
                 ItemViewOverlay.INSTANCE.openRecipeView(slot.getStack(), ItemViewOverlay.ItemViewOpenType.RESULT);
 
-            if (CommonEIVClient.ADD_BOOKMARK_KEYBIND.matches(i, j))
+            if (CommonEIVClient.ADD_BOOKMARK_KEYBIND.matches(event))
                 ItemBookmarkOverlay.INSTANCE.bookmarkItem(slot.getStack());
 
             break;

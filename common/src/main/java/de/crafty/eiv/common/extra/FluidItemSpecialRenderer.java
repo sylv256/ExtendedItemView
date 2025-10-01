@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -45,7 +46,7 @@ public class FluidItemSpecialRenderer implements SpecialModelRenderer<ItemStack>
 
 
     @Override
-    public void render(ItemStack stack, ItemDisplayContext itemDisplayContext, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay, boolean bl) {
+    public void submit(ItemStack stack, ItemDisplayContext itemDisplayContext, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, int overlay, boolean bl, int k) {
         if (!(stack.getItem() instanceof FluidItem fluidItem))
             return;
 
@@ -72,15 +73,16 @@ public class FluidItemSpecialRenderer implements SpecialModelRenderer<ItemStack>
 
         height *= renderHeight;
 
-        poseStack.pushPose();
-        poseStack.scale(1.0F, 1.0F, 1.0F);
-        VertexConsumer vertexConsumer = sprite.wrap(ItemRenderer.getFoilBuffer(multiBufferSource, RenderType.entityTranslucent(sprite.atlasLocation()), itemDisplayContext == ItemDisplayContext.GUI, bl));
-        Matrix4f matrix4f = poseStack.last().pose();
-        vertexConsumer.addVertex(matrix4f, 0, 0, 0).setUv(u0, v0).setOverlay(overlay).setLight(light).setColor(color).setNormal(0.0F, 0.0F, 1.0F);
-        vertexConsumer.addVertex(matrix4f, 0, renderHeight, 0).setUv(u0, v0 + height).setOverlay(overlay).setLight(light).setColor(color).setNormal(0.0F, 0.0F, 1.0F);
-        vertexConsumer.addVertex(matrix4f, 1.0F, renderHeight, 0).setUv(u0 + width, v0 + height).setOverlay(overlay).setLight(light).setColor(color).setNormal(0.0F, 0.0F, 1.0F);
-        vertexConsumer.addVertex(matrix4f, 1.0F, 0, 0).setUv(u0 + width, v0).setOverlay(overlay).setLight(light).setColor(color).setNormal(0.0F, 0.0F, 1.0F);
-        poseStack.popPose();
+//        poseStack.pushPose();
+//        poseStack.scale(1.0F, 1.0F, 1.0F);
+//        VertexConsumer vertexConsumer = sprite.wrap(ItemRenderer.getFoilBuffer(multiBufferSource, RenderType.entityTranslucent(sprite.atlasLocation()), itemDisplayContext == ItemDisplayContext.GUI, bl));
+//        Matrix4f matrix4f = poseStack.last().pose();
+//        vertexConsumer.addVertex(matrix4f, 0, 0, 0).setUv(u0, v0).setOverlay(overlay).setLight(light).setColor(color).setNormal(0.0F, 0.0F, 1.0F);
+//        vertexConsumer.addVertex(matrix4f, 0, renderHeight, 0).setUv(u0, v0 + height).setOverlay(overlay).setLight(light).setColor(color).setNormal(0.0F, 0.0F, 1.0F);
+//        vertexConsumer.addVertex(matrix4f, 1.0F, renderHeight, 0).setUv(u0 + width, v0 + height).setOverlay(overlay).setLight(light).setColor(color).setNormal(0.0F, 0.0F, 1.0F);
+//        vertexConsumer.addVertex(matrix4f, 1.0F, 0, 0).setUv(u0 + width, v0).setOverlay(overlay).setLight(light).setColor(color).setNormal(0.0F, 0.0F, 1.0F);
+//        poseStack.popPose();
+
     }
 
     @Override
@@ -98,8 +100,8 @@ public class FluidItemSpecialRenderer implements SpecialModelRenderer<ItemStack>
         public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked::new);
 
         @Override
-        public @NotNull SpecialModelRenderer<?> bake(EntityModelSet entityModelSet) {
-            return new FluidItemSpecialRenderer(new FluidItemModel(entityModelSet.bakeLayer(CommonEIVClient.FLUID_ITEM_MODEL_LAYER)));
+        public @Nullable SpecialModelRenderer<?> bake(BakingContext bakingContext) {
+            return new FluidItemSpecialRenderer(new FluidItemModel(bakingContext.entityModelSet().bakeLayer(CommonEIVClient.FLUID_ITEM_MODEL_LAYER)));
         }
 
         @Override

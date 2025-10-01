@@ -9,6 +9,8 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
@@ -96,39 +98,39 @@ public abstract class MixinAbstractContainerScreen<T extends AbstractContainerMe
 
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    private void injectOverlay$3(int i, int j, int k, CallbackInfoReturnable<Boolean> cir) {
+    private void injectOverlay$3(KeyEvent keyEvent, CallbackInfoReturnable<Boolean> cir) {
         if (ItemViewOverlay.SEARCHBAR.isFocused())
-            cir.setReturnValue(super.keyPressed(i, j, k));
+            cir.setReturnValue(super.keyPressed(keyEvent));
 
-        ItemViewOverlay.INSTANCE.keyPressed(i, j, k);
+        ItemViewOverlay.INSTANCE.keyPressed(keyEvent);
 
         if (this.hoveredSlot == null)
             return;
 
-        if (CommonEIVClient.USAGE_KEYBIND.matches(i, j) && this.hoveredSlot.hasItem())
+        if (CommonEIVClient.USAGE_KEYBIND.matches(keyEvent) && this.hoveredSlot.hasItem())
             ItemViewOverlay.INSTANCE.openRecipeView(this.hoveredSlot.getItem(), ItemViewOverlay.ItemViewOpenType.INPUT);
 
-        if (CommonEIVClient.RECIPE_KEYBIND.matches(i, j) && this.hoveredSlot.hasItem())
+        if (CommonEIVClient.RECIPE_KEYBIND.matches(keyEvent) && this.hoveredSlot.hasItem())
             ItemViewOverlay.INSTANCE.openRecipeView(this.hoveredSlot.getItem(), ItemViewOverlay.ItemViewOpenType.RESULT);
 
-        if (CommonEIVClient.ADD_BOOKMARK_KEYBIND.matches(i, j) && this.hoveredSlot.hasItem()) {
+        if (CommonEIVClient.ADD_BOOKMARK_KEYBIND.matches(keyEvent) && this.hoveredSlot.hasItem()) {
             ItemBookmarkOverlay.INSTANCE.bookmarkItem(this.hoveredSlot.getItem());
 
         }
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void injectOverlay$3(double mouseX, double mouseY, int mouseButton, CallbackInfoReturnable<Boolean> cir) {
-        if (ItemViewOverlay.SEARCHBAR.isHovered() && mouseButton == 1) {
+    private void injectOverlay$3(MouseButtonEvent mouseButtonEvent, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+        if (ItemViewOverlay.SEARCHBAR.isHovered() && mouseButtonEvent.button() == 1) {
             ItemViewOverlay.SEARCHBAR.setValue("");
             ItemViewOverlay.SEARCHBAR.setFocused(true);
             cir.setReturnValue(true);
         }
 
-        if (mouseButton == 0 && !ItemViewOverlay.SEARCHBAR.isHovered() && ItemViewOverlay.SEARCHBAR.isFocused())
+        if (mouseButtonEvent.button() == 0 && !ItemViewOverlay.SEARCHBAR.isHovered() && ItemViewOverlay.SEARCHBAR.isFocused())
             ItemViewOverlay.SEARCHBAR.setFocused(false);
 
-        ItemViewOverlay.INSTANCE.clickMouse((int) mouseX, (int) mouseY, mouseButton);
+        ItemViewOverlay.INSTANCE.clickMouse((int) mouseButtonEvent.x(), (int) mouseButtonEvent.y(), mouseButtonEvent.button());
     }
 
 

@@ -21,7 +21,7 @@ public class NeoForgeEIV {
 
 
         CommonEIV.LOGGER.info("Scanning for integrations...");
-        FMLLoader.getLoadingModList().getMods().forEach(modInfo -> {
+        FMLLoader.getCurrent().getLoadingModList().getMods().forEach(modInfo -> {
             Optional<String> optional = modInfo.getConfigElement("eiv");
             if (optional.isPresent()) {
                 CommonEIV.LOGGER.info("Loading integration: {}", optional.get());

@@ -19,7 +19,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 
 import static de.crafty.eiv.common.CommonEIV.LOGGER;
 import static de.crafty.eiv.common.CommonEIV.MODID;
@@ -30,19 +29,24 @@ public class CommonEIVClient {
 
     public static final MenuType<RecipeViewMenu> RECIPE_VIEW_MENU = new MenuType<>(RecipeViewMenu::new, FeatureFlagSet.of());
 
+    private static final KeyMapping.Category EIV_CATEGORY = new KeyMapping.Category(ResourceLocation.fromNamespaceAndPath(MODID, "keybinds"));
 
-    public static final KeyMapping USAGE_KEYBIND = new KeyMapping("key.eiv.usage", 85, "key.categories.eiv");
+    private static final KeyMapping.Category EIV_ADMIN_CATEGORY = new KeyMapping.Category(ResourceLocation.fromNamespaceAndPath(MODID, "admin"));
 
-    public static final KeyMapping RECIPE_KEYBIND = new KeyMapping("key.eiv.recipe", 82, "key.categories.eiv");
 
-    public static final KeyMapping TOGGLE_OVERLAY_KEYBIND = new KeyMapping("key.eiv.toggle_overlay", 79, "key.categories.eiv");
 
-    public static final KeyMapping ADD_BOOKMARK_KEYBIND = new KeyMapping("key.eiv.bookmark", 65, "key.categories.eiv");
+    public static final KeyMapping USAGE_KEYBIND = new KeyMapping("key.eiv.usage", 85, EIV_CATEGORY);
 
-    public static final KeyMapping GO_BACK_RECIPE = new KeyMapping("key.eiv.go_back", InputConstants.Type.MOUSE, 3, "key.categories.eiv");
-    public static final KeyMapping GO_FORWARD_RECIPE = new KeyMapping("key.eiv.go_forward", InputConstants.Type.MOUSE, 4, "key.categories.eiv");
+    public static final KeyMapping RECIPE_KEYBIND = new KeyMapping("key.eiv.recipe", 82, EIV_CATEGORY);
 
-    public static final KeyMapping USE_CHEATMODE = new KeyMapping("key.eiv.cheatmode", 342, "key.categories.eiv_admin");
+    public static final KeyMapping TOGGLE_OVERLAY_KEYBIND = new KeyMapping("key.eiv.toggle_overlay", 79, EIV_CATEGORY);
+
+    public static final KeyMapping ADD_BOOKMARK_KEYBIND = new KeyMapping("key.eiv.bookmark", 65, EIV_CATEGORY);
+
+    public static final KeyMapping GO_BACK_RECIPE = new KeyMapping("key.eiv.go_back", InputConstants.Type.MOUSE, 3, EIV_CATEGORY);
+    public static final KeyMapping GO_FORWARD_RECIPE = new KeyMapping("key.eiv.go_forward", InputConstants.Type.MOUSE, 4, EIV_CATEGORY);
+
+    public static final KeyMapping USE_CHEATMODE = new KeyMapping("key.eiv.cheatmode", 342, EIV_ADMIN_CATEGORY);
 
     public static final List<KeyMapping> EIV_KEY_MAPPINGS = List.of(USAGE_KEYBIND, RECIPE_KEYBIND, TOGGLE_OVERLAY_KEYBIND, ADD_BOOKMARK_KEYBIND, GO_BACK_RECIPE, GO_FORWARD_RECIPE, USE_CHEATMODE);
 
@@ -99,7 +103,7 @@ public class CommonEIVClient {
     }
 
     public static boolean isCheatmodeActive() {
-        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasPermissions(3) && InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), CommonEIVClient.USE_CHEATMODE.key.getValue());
+        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasPermissions(3) && InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), CommonEIVClient.USE_CHEATMODE.key.getValue());
     }
 
 }

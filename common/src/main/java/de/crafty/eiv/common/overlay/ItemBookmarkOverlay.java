@@ -13,6 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -176,19 +177,19 @@ public class ItemBookmarkOverlay {
         }
     }
 
-    public void keyPressed(int i, int j, int k) {
+    public void keyPressed(KeyEvent event) {
 
         for (ItemSlot slot : this.slots) {
             if (!slot.isHovered())
                 continue;
 
-            if (CommonEIVClient.USAGE_KEYBIND.matches(i, j))
+            if (CommonEIVClient.USAGE_KEYBIND.matches(event))
                 ItemViewOverlay.INSTANCE.openRecipeView(slot.getStack(), ItemViewOverlay.ItemViewOpenType.INPUT);
 
-            if (CommonEIVClient.RECIPE_KEYBIND.matches(i, j))
+            if (CommonEIVClient.RECIPE_KEYBIND.matches(event))
                 ItemViewOverlay.INSTANCE.openRecipeView(slot.getStack(), ItemViewOverlay.ItemViewOpenType.RESULT);
 
-            if (CommonEIVClient.ADD_BOOKMARK_KEYBIND.matches(i, j)) {
+            if (CommonEIVClient.ADD_BOOKMARK_KEYBIND.matches(event)) {
                 this.bookmarkedItems.remove(slot.getStack());
                 this.updateSlots();
             }
